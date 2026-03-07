@@ -89,36 +89,8 @@ function restoreDefaultRowIfEmpty() {
 
 
 
-// EMAIL JS BOOKING FUNCTION
-document.getElementById("booking-form").addEventListener("submit", function (e) {
-    e.preventDefault();
 
-    let name = document.getElementById("name").value.trim();
-    let email = document.getElementById("email").value.trim();
-    let phone = document.getElementById("phone").value.trim();
-    
-    emailjs.send("service_0cdpy1g", "template_60mjuer", {
-        user_name: name,
-        user_email: email,
-        user_phone: phone
-    })
-    .then(() => {
-        let msg = document.getElementById("success-msg");
-        msg.textContent = "Thank you for booking the service, we will get back to you soon.";
-        msg.style.display = "block";
-        
 
-        document.getElementById("booking-form").reset();
-        clearCart();
-    })
-    .catch((error) => {
-       console.error("Email failed:", error);
-    let msg = document.getElementById("success-msg");
-    msg.textContent = "Failed to send booking email. Try again.";
-    msg.style.color = "red";
-    msg.style.display = "block";
-    });
-});
 
 
 function clearCart(){
