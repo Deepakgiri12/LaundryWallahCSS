@@ -106,8 +106,10 @@ document.getElementById("booking-form").addEventListener("submit", function (e) 
         let msg = document.getElementById("success-msg");
         msg.textContent = "Thank you for booking the service, we will get back to you soon.";
         msg.style.display = "block";
+        
 
         document.getElementById("booking-form").reset();
+        clearCart();
     })
     .catch((error) => {
        console.error("Email failed:", error);
@@ -117,3 +119,23 @@ document.getElementById("booking-form").addEventListener("submit", function (e) 
     msg.style.display = "block";
     });
 });
+
+
+function clearCart(){
+    // remove all rows except header
+    let rows = document.querySelectorAll(".print-output tr:not(:first-child)");
+    rows.forEach(row => row.remove());
+
+    // restore empty row
+    restoreDefaultRowIfEmpty();
+
+    // reset total amount
+    document.getElementById("total-amt").textContent = "₹0.00";
+
+    // reset buttons
+    button.forEach(btn => {
+        btn.innerHTML = iconAdd + "Add Item";
+        btn.style.backgroundColor = "#f1f1f8";
+        btn.style.color = "black";
+    });
+}

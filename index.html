@@ -253,33 +253,48 @@
 
   const form = document.getElementById("booking-form");
 
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
+ form.addEventListener("submit", function(e) {
+  e.preventDefault();
 
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const phone = document.getElementById("phone").value.trim();
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
 
-    emailjs.send("service_0cdpy1g", "template_60mjuer", {
-      user_name: name,
-      user_email: email,
-      user_phone: phone
-    })
-    .then(() => {
-      const msg = document.getElementById("success-msg");
-      msg.textContent = "Thank you for booking the service, we will get back to you soon.";
-      msg.style.color = "green";
-      msg.style.display = "block";
-      form.reset();
-    })
-    .catch((error) => {
-      console.error("EmailJS Error:", error);
-      const msg = document.getElementById("success-msg");
-      msg.textContent = `Failed to send booking email: ${error.text || error.status}`;
-      msg.style.color = "red";
-      msg.style.display = "block";
-    });
+  const cartItems = getCartItems();
+  function getCartItems() {
+  let rows = document.querySelectorAll(".print-output tr:not(#empty-row):not(:first-child)");
+  let items = [];
+
+  rows.forEach(row => {
+    let service = row.querySelector("td:nth-child(2)").textContent;
+    let price = row.querySelector("td:nth-child(3)").textContent;
+
+    items.push(service + " - " + price);
   });
+
+  return items.join("\n");
+}
+
+  emailjs.send("service_0cdpy1g", "template_60mjuer", {
+    user_name: name,
+    user_email: email,
+    user_phone: phone,
+    order_items: cartItems,
+    to_email: email
+  })
+  .then(() => {
+    const msg = document.getElementById("success-msg");
+    msg.textContent = "Order placed successfully. Confirmation email sent.";
+    msg.style.color = "green";
+    msg.style.display = "block";
+
+    form.reset();
+    clearCart(); // optional: clear cart after order
+  })
+  .catch((error) => {
+    console.error("EmailJS Error:", error);
+  });
+});
 </script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
